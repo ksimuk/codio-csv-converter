@@ -62,10 +62,17 @@ const isHeader = (line: string) => {
 const parseItems = (items: string): Map<string, string> => {
   const res = new Map<string, string>()
   let currentItem: Array<string> = Array(),
-      currentHeader: string
+    currentHeader: string,
+    inString: Boolean = false
   const lines = items.split('\n')
   _.each(lines, (line: string) => {
-    if (isHeader(line)) {
+    if (_.startsWith(line, "'")) {
+      inString = true
+    }
+    if (_.endsWith(line, "'")) {
+      inString = false
+    }
+    if (!inString && isHeader(line)) {
       if (currentHeader) {
         res.set(currentHeader, currentItem.join('\n'))
         currentItem = Array()
