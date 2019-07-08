@@ -25,6 +25,7 @@ const process = async (inFile: string, out: string) => {
   const inStream = getInput(inFile)
   const outStream = fs.createWriteStream(out)
   const headers = await getHeaders(inFile)
+
   const stringifier = stringify({
     delimiter: ',',
     header: true,
@@ -44,14 +45,14 @@ const process = async (inFile: string, out: string) => {
 
 const getHeaders = async (file: string): Promise<string[]> => {
   const processor = getInput(file)
-  let headers: string[] = Array()
+  const headers: Array<any> = Array()
   processor.on("data", (record: any) => {
     transformRecord(record)
-    headers = _.union(_.keys(record))
+    headers.push(_.keys(record))
   })
   await new Promise(fulfill => processor.on("finish", fulfill));
 
-  return headers
+  return _.uniq(_.flatten(headers))
 }
 
 const isHeader = (line: string) => {
@@ -78,6 +79,9 @@ const parseItems = (items: string): Map<string, string> => {
 }
 
 const transformArray = (record: any, items: string, prefix = ""): void => {
+  if (_.startsWith(items, '"')) {
+    items = items.slice(1,-1);
+  }
   const map = parseItems(items)
   map.forEach((value: string, key: string) => {
     record[`${prefix}_${key}`] = value
