@@ -2,8 +2,14 @@
 
 install:
 ```
+npm install
 npm install yarn -g
 yarn
+yarn run build
+```
+
+once you pull new source, run:
+```
 yarn run build
 ```
 
