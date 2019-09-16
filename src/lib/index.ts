@@ -62,7 +62,7 @@ const isHeader = (line: string) => {
 const parseItems = (items: string): Map<string, string> => {
   const res = new Map<string, string>()
   let currentItem: Array<string> = Array(),
-    currentHeader: string,
+    currentHeader: string | undefined = undefined,
     inString: Boolean = false
   const lines = items.split('\n')
 
