@@ -65,6 +65,7 @@ const parseItems = (items: string): Map<string, string> => {
     currentHeader: string,
     inString: Boolean = false
   const lines = items.split('\n')
+
   _.each(lines, (line: string) => {
     if (_.startsWith(line, "'")) {
       inString = true
@@ -82,6 +83,9 @@ const parseItems = (items: string): Map<string, string> => {
       currentItem.push(line)
     }
   })
+  if (!_.isUndefined(currentHeader)) {
+    res.set(currentHeader, currentItem.join('\n'))
+  }
   return res
 }
 
